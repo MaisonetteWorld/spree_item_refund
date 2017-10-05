@@ -1,0 +1,49 @@
+<%= render partial: 'spree/admin/shared/order_tabs', locals: { current: :item_refunds } %>
+
+<% content_for :page_actions do %>
+  <% if @order.item_refunds_enabled? && can?(:create, Spree::ItemRefund) %>
+    <%= button_link_to Spree.t(:new_item_refund), new_admin_order_item_refund_url(@order), class: "btn-success", icon: 'add' %>
+  <% end %>
+<% end %>
+
+<% content_for :page_title do %>
+  / <%= Spree.t(:item_refunds) %>
+<% end %>
+
+<% if @order.item_refunds_enabled? %>
+  <table class="table">
+    <thead data-hook="item_refund_header">
+      <tr>
+        <th><%= Spree.t(:item_refund_number) %></th>
+        <th><%= Spree.t(:status) %></th>
+        <th><%= Spree.t(:pre_tax_amount) %></th>
+        <th><%= "#{Spree.t('date')}/#{Spree.t('time')}" %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @item_refunds.each do |item_refund| %>
+        <tr id="<%= spree_dom_id(item_refund) %>" data-hook="item_refund_row">
+          <td><%= item_refund.number %></td>
+          <td>
+            <span class="label label-<%= item_refund.editable? ? 'pending' : 'complete' %>">
+              <%= Spree.t("item_refund_states.#{item_refund.state}") %>
+            </span>
+          </td>
+          <td><%= item_refund.display_pre_tax_amount.to_html %></td>
+          <td><%= pretty_time(item_refund.created_at) %></td>
+          <td class="actions actions-2">
+            <%= link_to_edit(item_refund, no_text: true, class: 'edit') if can?(:edit, item_refund) %>
+            <% if can?(:delete, item_refund) && !item_refund.editable? %>
+              <%= link_to_delete item_refund, no_text: true %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div data-hook="item_refund_cannot_create" class="alert alert-info no-objects-found">
+    <%= Spree.t(:cannot_create_item_refunds) %>
+  </div>
+<% end %>

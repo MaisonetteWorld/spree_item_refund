@@ -1,5 +1,7 @@
 module Spree
-  class ItemRefundReason
-    validates :name, presens: true
+  class ItemRefundReason < Spree::Base
+    acts_as_paranoid
+
+    validates :name, presence: true
   end
 end

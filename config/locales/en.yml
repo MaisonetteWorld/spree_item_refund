@@ -1,3 +1,9 @@
 en:
-  items_refunds: "Item Refunds"
-  items_refund: "Item Refund"
+  spree:
+    items_refunds: "Item Refunds"
+    items_refund: "Item Refund"
+    item_refund_states:
+      new: New
+      ready: Ready
+      closed: Closed
+    select_an_item_refund_reason: Select an Item Refund Reason
