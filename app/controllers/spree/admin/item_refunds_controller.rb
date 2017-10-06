@@ -31,17 +31,16 @@ module Spree
 
       def load_item_refund_units
         all_inventory_units = @item_refund.order.inventory_units
-        associated_inventory_units = @item_refund.item_refund_units.map(&:inventory_unit)
+        associated_inventory_units = @item_refund.order.item_refunds.map do |item_refund|
+          item_refund.item_refund_units.map(&:inventory_unit)
+        end.flatten
+        # associated_inventory_units = @item_refund.item_refund_units.map(&:inventory_unit)
         unassociated_inventory_units = all_inventory_units - associated_inventory_units
 
-        new_units = unassociated_inventory_units.map do |new_unit|
+        @form_new_item_refund_units = unassociated_inventory_units.map do |new_unit|
           Spree::ItemRefundUnit.new(inventory_unit: new_unit).
             tap(&:set_default_pre_tax_amount)
-        end
-        @form_item_refund_units = (@item_refund.item_refund_units + new_units).sort_by(&:inventory_unit_id)
-        # if @form_item_refund_units.size == 1
-        #   @form_item_refund_units = @form_item_refund_units.first
-        # end
+        end.sort_by(&:inventory_unit_id)
       end
     end
   end

@@ -6,8 +6,9 @@ module Spree
       end
 
       def compute(item_refund_unit)
-        weighted_order_adjustment_amount(item_refund_unit.inventory_unit) +
-          weighted_line_item_pre_tax_amount(item_refund_unit.inventory_unit)
+        value = weighted_order_adjustment_amount(item_refund_unit.inventory_unit) +
+                weighted_line_item_pre_tax_amount(item_refund_unit.inventory_unit)
+        value.round(2)
       end
 
       private
