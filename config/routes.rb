@@ -5,6 +5,7 @@ Spree::Core::Engine.routes.draw do
     resources :orders, except: [:show] do
       resources :item_refunds do
         member do
+          put :refund
           put :fire
         end
       end

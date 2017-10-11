@@ -1,5 +1,6 @@
 en:
   spree:
+    cannot_refund_not_prepared: "You cannot refund unless the Item Refund is in Prepared state"
     items_refunds: "Item Refunds"
     items_refund: "Item Refund"
     item_refund_states:

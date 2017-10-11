@@ -1,18 +1,22 @@
 <table class="table table-condensed table-bordered index return-items-table">
   <thead>
-    <tr data-hook="rma_header">
+    <tr data-hook="item_refund_header">
       <th></th>
       <th><%= Spree.t(:product) %></th>
       <th><%= Spree.t(:state) %></th>
       <th><%= Spree.t(:charged) %></th>
       <th><%= Spree.t(:pre_tax_refund_amount) %></th>
+      <% if @item_refund.prepared? %>
+        <th><%= Spree.t(:tax_amount) %></th>
+        <th><%= Spree.t(:total) %></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
     <%= f.fields_for :item_refund_units, item_refund_units do |item_fields| %>
       <% unit = item_fields.object %>
       <% inventory_unit = unit.inventory_unit %>
-      <% editable = unit.inventory_unit.on_hand? %>
+      <% editable = @item_refund.editable? && unit.inventory_unit.on_hand? %>
       <tr>
         <td class="inventory-unit-checkbox">
           <% if editable %>
@@ -36,6 +40,10 @@
             <%= unit.display_pre_tax_amount %>
           <% end %>
         </td>
+        <% if @item_refund.prepared? %>
+          <td><%= unit.display_tax %></td>
+          <td><%= unit.display_total %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

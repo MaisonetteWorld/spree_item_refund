@@ -33,9 +33,11 @@
           <td><%= item_refund.display_pre_tax_amount.to_html %></td>
           <td><%= pretty_time(item_refund.created_at) %></td>
           <td class="actions actions-2">
-            <%= link_to_edit(item_refund, no_text: true, class: 'edit') if can?(:edit, item_refund) %>
-            <% if can?(:delete, item_refund) && !item_refund.editable? %>
-              <%= link_to_delete item_refund, no_text: true %>
+            <% if can?(:edit, item_refund) %>
+              <%= link_to_edit(item_refund, no_text: true, class: 'edit')  %>
+            <% end %>
+            <% if can?(:delete, item_refund) && item_refund.editable? %>
+              <%= link_to_delete item_refund, no_text: true, data: { confirm: Spree.t(:are_you_sure) } %>
             <% end %>
           </td>
         </tr>

@@ -14,8 +14,10 @@ module Spree
       private
 
       def weighted_order_adjustment_amount(inventory_unit)
-        inventory_unit.order.adjustments.eligible.non_tax.sum(:amount) *
-          percentage_of_order_total(inventory_unit)
+        inventory_unit.
+          order.adjustments.eligible.non_tax.promotion.
+          where.not(adjustable_type: 'Spree::Shipment').
+          sum(:amount) * percentage_of_order_total(inventory_unit)
       end
 
       def weighted_line_item_pre_tax_amount(inventory_unit)

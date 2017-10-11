@@ -11,7 +11,15 @@ module Spree
     self.refund_amount_calculator = Calculator::ItemRefunds::DefaultRefundAmount
 
     extend DisplayMoney
-    money_methods :pre_tax_amount
+    money_methods :pre_tax_amount, :tax, :total
+
+    def tax
+      included_tax_total + additional_tax_total
+    end
+
+    def total
+      pre_tax_amount + tax
+    end
 
     def set_default_pre_tax_amount
       self.pre_tax_amount = refund_amount_calculator.new.compute(self)

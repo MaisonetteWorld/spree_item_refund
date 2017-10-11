@@ -1,10 +1,14 @@
+<%= render partial: 'spree/admin/shared/order_tabs', locals: { current: :item_refunds } %>
+
 <% content_for :page_actions do %>
-  <% if @item_refund.editable? %>
-    <%= button_link_to Spree.t('actions.cancel'), fire_admin_order_item_refund_url(@order, @item_refund, e: 'destroy'), method: :put, data: { confirm: Spree.t(:are_you_sure) }, icon: "delete" %>
+  <% if @item_refund.new? && !@item_refund.item_refund_units.empty? %>
+    <%= button_link_to Spree.t('actions.prepare'), fire_admin_order_item_refund_url(@order, @item_refund, e: 'prepare'), method: :put, data: { confirm: Spree.t(:are_you_sure) }, icon: "arrow-right" %>
+  <% end %>
+  <% if @item_refund.prepared? %>
+    <%= button_link_to Spree.t('actions.renew'), fire_admin_order_item_refund_url(@order, @item_refund, e: 'renew'), method: :put, data: { confirm: Spree.t(:are_you_sure) }, icon: "arrow-left" %>
+    <%= button_link_to Spree.t('actions.refund'), spree.refund_admin_order_item_refund_url, method: :put, data: { confirm: Spree.t(:are_you_sure) }, icon: "usd" %>
   <% end %>
 <% end %>
-
-<%= render partial: 'spree/admin/shared/order_tabs', locals: { current: :item_refunds } %>
 
 <% content_for :page_title do %>
   / <%= link_to Spree.t(:item_refunds), spree.admin_order_item_refunds_url %>
@@ -20,7 +24,7 @@
     <div class="form-actions" data-hook="buttons">
       <%= button Spree.t('actions.update'), 'repeat' %>
       <span class="or"><%= Spree.t(:or) %></span>
-      <%= button_link_to Spree.t('actions.cancel'), spree.admin_order_item_refunds_url(@order), icon: 'delete' %>
+      <%= button_link_to Spree.t('actions.cancel_changes'), spree.admin_order_item_refunds_url(@order), icon: 'delete' %>
     </div>
   </fieldset>
 <% end %>
