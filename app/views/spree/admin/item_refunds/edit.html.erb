@@ -2,11 +2,11 @@
 
 <% content_for :page_actions do %>
   <% if @item_refund.new? && !@item_refund.item_refund_units.empty? %>
-    <%= button_link_to Spree.t('actions.prepare'), fire_admin_order_item_refund_url(@order, @item_refund, e: 'prepare'), method: :put, data: { confirm: Spree.t(:are_you_sure) }, icon: "arrow-right" %>
+    <%= button_link_to Spree.t('actions.prepare'), fire_admin_order_item_refund_url(@order, @item_refund, e: 'prepare'), method: :put, data: { confirm: Spree.t(:are_you_sure_prepare) }, icon: "arrow-right" %>
   <% end %>
   <% if @item_refund.prepared? %>
-    <%= button_link_to Spree.t('actions.renew'), fire_admin_order_item_refund_url(@order, @item_refund, e: 'renew'), method: :put, data: { confirm: Spree.t(:are_you_sure) }, icon: "arrow-left" %>
-    <%= button_link_to Spree.t('actions.refund'), spree.refund_admin_order_item_refund_url, method: :put, data: { confirm: Spree.t(:are_you_sure) }, icon: "usd" %>
+    <%= button_link_to Spree.t('actions.renew'), fire_admin_order_item_refund_url(@order, @item_refund, e: 'renew'), method: :put, data: { confirm: Spree.t(:are_you_sure_renew) }, icon: "arrow-left" %>
+    <%= button_link_to Spree.t('actions.refund'), spree.refund_admin_order_item_refund_url, method: :put, data: { confirm: Spree.t(:are_you_sure_refund) }, icon: "usd" %>
   <% end %>
 <% end %>
 

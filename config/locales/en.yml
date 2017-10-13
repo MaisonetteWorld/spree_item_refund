@@ -1,5 +1,8 @@
 en:
   spree:
+    are_you_sure_prepare: Are you sure that you want to proceed to Prepared state?
+    are_you_sure_refund: Are you sure that you want to Refund?
+    are_you_sure_renew: Are you sure that you want to go back to New state?
     cannot_refund_not_prepared: "You cannot refund unless the Item Refund is in Prepared state"
     items_refunds: "Item Refunds"
     items_refund: "Item Refund"
@@ -7,4 +10,5 @@ en:
       new: New
       ready: Ready
       closed: Closed
+    select_a_refund_type: Select a Refund Type
     select_an_item_refund_reason: Select an Item Refund Reason

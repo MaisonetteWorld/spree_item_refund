@@ -8,6 +8,10 @@ module Spree
       update.fails  :load_form_data
 
       FIREABLE_EVENTS = %w[prepare renew].freeze
+      REFUND_TYPES = %w[
+        Spree::ItemRefundTypes::StoreCredit
+        Spree::ItemRefundTypes::OriginalPayment
+      ].freeze
 
       def fire
         event = params[:e]
@@ -35,6 +39,7 @@ module Spree
       def load_form_data
         load_item_refund_reasons
         load_item_refund_units
+        prepare_refund_type_options
       end
 
       def load_item_refund_reasons
@@ -58,6 +63,12 @@ module Spree
           Spree::ItemRefundUnit.new(inventory_unit: new_unit).
             tap(&:set_default_pre_tax_amount)
         end.sort_by(&:inventory_unit_id)
+      end
+
+      def prepare_refund_type_options
+        @refund_type_options = REFUND_TYPES.map do |class_name|
+          [class_name.demodulize.titleize, class_name]
+        end
       end
     end
   end
