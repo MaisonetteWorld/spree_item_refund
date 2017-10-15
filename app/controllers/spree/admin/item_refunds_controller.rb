@@ -8,8 +8,13 @@ module Spree
       update.fails  :load_form_data
 
       FIREABLE_EVENTS = %w[prepare renew].freeze
-      REFUND_TYPES = %w[
+
+      REFUND_TYPES_USER = %w[
         Spree::ItemRefundTypes::StoreCredit
+        Spree::ItemRefundTypes::OriginalPayment
+      ].freeze
+
+      REFUND_TYPES_GUEST = %w[
         Spree::ItemRefundTypes::OriginalPayment
       ].freeze
 
@@ -66,7 +71,8 @@ module Spree
       end
 
       def prepare_refund_type_options
-        @refund_type_options = REFUND_TYPES.map do |class_name|
+        refund_types = @item_refund.order.user.present? ? REFUND_TYPES_USER : REFUND_TYPES_GUEST
+        @refund_type_options = refund_types.map do |class_name|
           [class_name.demodulize.titleize, class_name]
         end
       end

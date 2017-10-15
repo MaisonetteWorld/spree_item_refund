@@ -7,10 +7,10 @@ module Spree
           payments.where.not(source_type: 'Spree::StoreCredit').first
         end
 
-        def refund
-          refund = refunds.build(
-            payment: payment_for_refund,
-            amount: total,
+        def refund(item_refund)
+          refund = item_refund.refunds.build(
+            payment: payment_for_refund(item_refund),
+            amount: item_refund.total,
             reason: Spree::RefundReason.return_processing_reason
           )
           refund.save!

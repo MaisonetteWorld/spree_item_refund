@@ -8,6 +8,6 @@ module Spree
       end
     end
 
-    scope :not_canceled, -> { where.not(state: canceled) }
+    scope :not_canceled, -> { where.not(state: :canceled) }
   end
 end

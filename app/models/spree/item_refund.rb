@@ -22,6 +22,7 @@ module Spree
                                   allow_destroy: true
     validates :order,
               :reason,
+              :refund_type,
               presence: true
     money_methods :pre_tax_amount, :total
 

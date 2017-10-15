@@ -14,12 +14,13 @@ module Spree
         item_refund.item_refund_units.each do |item_refund_unit|
           inventory_unit = item_refund_unit.inventory_unit
           shipment = inventory_unit.shipment
+
           unless shipment.inventory_units.not_canceled.size.zero?
             shipment = shipment.dup
             shipment.save
             inventory_unit.update(shipment: shipment)
           end
-          shipment.cancel!
+          Spree::Shipment.find_by_number(shipment.number).cancel!
         end
       end
 
