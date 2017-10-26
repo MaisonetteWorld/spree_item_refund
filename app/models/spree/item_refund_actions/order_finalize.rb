@@ -6,16 +6,13 @@ module Spree
 
       def initialize(item_refund)
         order = item_refund.order
-        canceled_shipment_numbers = order.shipments.where(state: 'canceled').map(&:number)
         order.update_totals
+        order.persist_totals
+        order.updater.update_payment_state
         order.save
 
-        order.updater.update
-
-        canceled_shipment_numbers.each do |number|
-          shipment = Spree::Shipment.find_by_number(number)
-          shipment.update(cost: 0)
-          shipment.cancel!
+        order.shipments.where.not(state: :canceled).each do |shipment|
+          shipment.update!(order)
         end
         @success = true
       rescue StandardError => error

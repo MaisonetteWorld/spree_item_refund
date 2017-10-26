@@ -20,7 +20,6 @@ module Spree
             transaction_id: authorization_code,
             reason: item_refund.refund_reason
           )
-
           item_refund.refunds << refund
           item_refund.order.updater.update
         end
@@ -33,12 +32,17 @@ module Spree
           end
         end
 
+        def store_credit_category(options)
+          category_name = options[:category] || SpreeItemRefund.configuration.store_credit_category_name
+          Spree::StoreCreditCategory.find_or_create_by!(name: category_name)
+        end
+
         def store_credit_params(item_refund, options = {})
           order = item_refund.order
           {
             user: order.user,
             amount: item_refund.total || options[:amount],
-            category: Spree::StoreCreditCategory.find_by_name('Default') || options[:category],
+            category: store_credit_category(options),
             created_by: Spree::User.admin.first,
             memo: "Item Refund #{item_refund.number} for Order ##{order.number}",
             currency: order.currency

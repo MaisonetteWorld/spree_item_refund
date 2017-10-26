@@ -8,9 +8,9 @@ module Spree
         refund_klass = item_refund.refund_type.constantize
         refund_klass.refund(item_refund)
         @success = true
-      rescue StandardError => error
-        @error = error.message
-        @success = false
+      # rescue StandardError => error
+      #   @error = error.message
+      #   @success = false
       end
     end
   end

@@ -17,6 +17,7 @@
         <th><%= Spree.t(:item_refund_number) %></th>
         <th><%= Spree.t(:status) %></th>
         <th><%= Spree.t(:pre_tax_amount) %></th>
+        <th><%= Spree.t(:total) %></th>
         <th><%= "#{Spree.t('date')}/#{Spree.t('time')}" %></th>
         <th></th>
       </tr>
@@ -31,6 +32,7 @@
             </span>
           </td>
           <td><%= item_refund.display_pre_tax_amount.to_html %></td>
+          <td><%= item_refund.editable? ? '-' : item_refund.display_total %></td>
           <td><%= pretty_time(item_refund.created_at) %></td>
           <td class="actions actions-2">
             <% if can?(:edit, item_refund) %>

@@ -6,7 +6,9 @@
       <% end %>
       <th><%= Spree.t(:product) %></th>
       <th><%= Spree.t(:state) %></th>
-      <th><%= Spree.t(:charged) %></th>
+      <% if @item_refund.editable? %>
+        <th><%= Spree.t(:charged) %></th>
+      <% end %>
       <th><%= Spree.t(:pre_tax_refund_amount) %></th>
       <% if !@item_refund.editable? %>
         <th><%= Spree.t(:tax_amount) %></th>
@@ -31,9 +33,11 @@
           <div class="variant-options"><%= inventory_unit.variant.options_text %></div>
         </td>
         <td><%= inventory_unit.state.humanize %></td>
-        <td>
-          <%= unit.display_pre_tax_amount %>
-        </td>
+        <% if @item_refund.editable? %>
+          <td>
+            <%= unit.display_pre_tax_amount %>
+          </td>
+        <% end %>
         <td>
           <% if editable %>
             <%= item_fields.text_field :pre_tax_amount,
