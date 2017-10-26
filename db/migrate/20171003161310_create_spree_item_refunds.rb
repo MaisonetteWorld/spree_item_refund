@@ -1,4 +1,4 @@
-class CreateSpreeItemRefunds < ActiveRecord::Migration
+class CreateSpreeItemRefunds < ActiveRecord::Migration[4.2]
   def change
     create_table :spree_item_refunds, force: :cascade do |t|
       t.string   :number, limit: 32

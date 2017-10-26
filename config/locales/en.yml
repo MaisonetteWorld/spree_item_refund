@@ -11,4 +11,4 @@ en:
       ready: Ready
       closed: Closed
     select_a_refund_type: Select a Refund Type
-    select_an_item_refund_reason: Select an Item Refund Reason
+    select_a_refund_reason: Select an Item Refund Reason

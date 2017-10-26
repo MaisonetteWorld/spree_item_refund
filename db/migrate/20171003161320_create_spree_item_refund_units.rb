@@ -1,4 +1,4 @@
-class CreateSpreeItemRefundUnits < ActiveRecord::Migration
+class CreateSpreeItemRefundUnits < ActiveRecord::Migration[4.2]
   def change
     create_table :spree_item_refund_units, force: :cascade do |t|
       t.integer  :item_refund_id

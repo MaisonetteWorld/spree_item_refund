@@ -6,14 +6,9 @@ module Spree
       included do
         private
 
-        def calculate_tax
+        def calculate_totals
           refund_tax_calculator.call(self)
           reload
-
-          # rounding every return item individually to handle edge cases for consecutive partial
-          # returns where rounding might cause us to try to reimburse more than was originally billed
-          # following logic from Spree core reimbusement
-          calculated_total = item_refund_units.map { |unit| unit.total.to_d.round(2) }.sum
           update!(total: calculated_total)
         end
 

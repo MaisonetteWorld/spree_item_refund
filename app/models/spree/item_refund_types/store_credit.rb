@@ -1,37 +1,44 @@
 module Spree
   module ItemRefundTypes
-    class StoreCredit
+    class StoreCredit < OriginalPayment
       class << self
-        def payment_for_refund(item_refund)
-          payments = item_refund.order.payments.valid
-          payments.where.not(source_type: 'Spree::StoreCredit').first || payments.first
-        end
-
-        def refund(item_refund)
-          store_credit = Spree::StoreCredit.new(store_credit_params(item_refund))
-          if store_credit.save!
-            # create refund entry for order totals purposes
-            refund = item_refund.refunds.build(
-              payment_id: payment_for_refund(item_refund).id,
-              amount: item_refund.total,
-              transaction_id: store_credit.generate_authorization_code,
-              reason: Spree::RefundReason.return_processing_reason
-            )
-
-            if refund.save!
-              # update order totals
-              item_refund.order.updater.update
-            end
+        def payments(item_refund)
+          item_refund.order.payments.valid.
+            sort_by { |o| o.source_type == 'Spree::StoreCredit' ? 0 : 1 }.select do |payment|
+            payment.credit_allowed > 0
           end
         end
 
-        def store_credit_params(item_refund)
-          category = Spree::StoreCreditCategory.find_by_name('Default') || Spree::StoreCreditCategory.first
+        def create_refund(item_refund, payment, amount)
+          authorization_code = store_credit_refund(item_refund, payment, amount)
+
+          # create refund entry for order totals purposes
+          # setting transaction_id prevents the refund from processing
+          refund = Spree::Refund.create(
+            payment: payment,
+            amount: amount,
+            transaction_id: authorization_code,
+            reason: item_refund.refund_reason
+          )
+
+          item_refund.refunds << refund
+          item_refund.order.updater.update
+        end
+
+        def store_credit_refund(item_refund, payment, amount)
+          if payment.source_type != 'Spree::StoreCredit'
+            store_credit = Spree::StoreCredit.new(store_credit_params(item_refund, amount: amount))
+            store_credit.save
+            store_credit.generate_authorization_code
+          end
+        end
+
+        def store_credit_params(item_refund, options = {})
           order = item_refund.order
           {
             user: order.user,
-            amount: item_refund.total,
-            category: category,
+            amount: item_refund.total || options[:amount],
+            category: Spree::StoreCreditCategory.find_by_name('Default') || options[:category],
             created_by: Spree::User.admin.first,
             memo: "Item Refund #{item_refund.number} for Order ##{order.number}",
             currency: order.currency

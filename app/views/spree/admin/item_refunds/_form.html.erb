@@ -15,26 +15,31 @@
                          item_refund_units: @form_new_item_refund_units } %>
   <% end %>
 
-  <% if @item_refund.prepared? %>
-    <%= f.field_container :totals, class: ['form-group'] do %>
-      <%= f.label :total_refund_amount %>
-      <p><%= @item_refund.display_total %></p>
+  <% if !@item_refund.editable? %>
+    <%= f.field_container :item_refund_total, class: ['form-group'] do %>
+      <%= f.label :item_refund_total %>
+      <p><%= @item_refund.display_calculated_item_total %></p>
+    <% end %>
+
+    <%= f.field_container :total_refund_amount_including_shipments, class: ['form-group'] do %>
+      <%= f.label :total_refund_amount %><br>
+      <%= @item_refund.display_total %>
     <% end %>
   <% end %>
 
   <% if @item_refund.editable? %>
-    <%= f.field_container :reason, class: ['form-group'] do %>
-      <%= f.label :reason, Spree.t(:reason) %>
-      <%= f.select :item_refund_reason_id,
-                   @reasons.collect{ |r| [r.name, r.id] },
+    <%= f.field_container :refund_reason, class: ['form-group'] do %>
+      <%= f.label :refund_reason, Spree.t(:refund_reason) %>
+      <%= f.select :refund_reason_id,
+                   @refund_reasons.collect{ |r| [r.name, r.id] },
                    { include_blank: true },
-                   { class: 'select2', "data-placeholder" => Spree.t(:select_an_item_refund_reason) } %>
+                   { class: 'select2', "data-placeholder" => Spree.t(:select_a_refund_reason) } %>
       <%= f.error_message_on :reason %>
     <% end %>
   <% else %>
-    <%= f.field_container :item_refund_reason_id, class: ['form-group'] do %>
-      <%= f.label :reason %>
-      <p><%= @item_refund.reason.name %></p>
+    <%= f.field_container :refund_reason, class: ['form-group'] do %>
+      <%= f.label :refund_reason %>
+      <p><%= @item_refund.refund_reason.name %></p>
     <% end %>
   <% end %>
 

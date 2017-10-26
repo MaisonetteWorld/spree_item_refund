@@ -42,17 +42,17 @@ module Spree
       private
 
       def load_form_data
-        load_item_refund_reasons
+        load_refund_reasons
         load_item_refund_units
         prepare_refund_type_options
       end
 
-      def load_item_refund_reasons
-        @reasons = Spree::ItemRefundReason.all
+      def load_refund_reasons
+        @refund_reasons = Spree::RefundReason.all
 
         # Only allow an inactive reason if it's already associated to the Item Refund
-        if @item_refund.reason && !@item_refund.reason.active?
-          @reasons << @item_refund.reason
+        if @item_refund.refund_reason && !@item_refund.refund_reason.active?
+          @refund_reasons << @item_refund.refund_reason
         end
       end
 

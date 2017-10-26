@@ -2,6 +2,7 @@ module Spree
   class ItemRefund
     module StateMachine
       extend ActiveSupport::Concern
+
       included do
         state_machine initial: :new do
           event :renew do
@@ -12,7 +13,7 @@ module Spree
             transition from: :new, to: :prepared
           end
           before_transition to: :prepared, do: :ensure_units_not_empty
-          after_transition to: :prepared, do: :calculate_tax
+          after_transition to: :prepared, do: :calculate_totals
 
           event :refund do
             transition from: :prepared, to: :refunded

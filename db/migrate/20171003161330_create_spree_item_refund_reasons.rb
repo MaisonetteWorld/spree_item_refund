@@ -1,4 +1,4 @@
-class CreateSpreeItemRefundReasons < ActiveRecord::Migration
+class CreateSpreeItemRefundReasons < ActiveRecord::Migration[4.2]
   def change
     create_table :spree_item_refund_reasons, force: :cascade do |t|
       t.string :name

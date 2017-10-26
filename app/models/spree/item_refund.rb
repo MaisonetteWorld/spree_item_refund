@@ -2,6 +2,7 @@ module Spree
   class ItemRefund < Spree::Base
     include Spree::Core::NumberGenerator.new(prefix: 'IR', length: 9)
     include ItemRefund::StateMachine
+    include ItemRefund::Totals
     include ItemRefund::PrepareEventHandler
     include ItemRefund::RefundEventHandler
     extend DisplayMoney
@@ -15,26 +16,31 @@ module Spree
     belongs_to :order,
                class_name: 'Spree::Order',
                inverse_of: :item_refunds
-    belongs_to :reason,
-               class_name: 'Spree::ItemRefundReason',
-               foreign_key: :item_refund_reason_id
+    belongs_to :refund_reason
     accepts_nested_attributes_for :item_refund_units,
                                   allow_destroy: true
     validates :order,
-              :reason,
+              :refund_reason,
               :refund_type,
               presence: true
-    money_methods :pre_tax_amount, :total
+    money_methods :calculated_item_total, :calculated_ship_total, :pre_tax_amount, :total
 
     class_attribute :refund_tax_calculator
     self.refund_tax_calculator = Calculator::ItemRefunds::DefaultTaxCalculator
+
+    def canceled_shipments
+      @canceled_shipments ||= prepare_canceled_shipments
+    end
 
     def editable?
       new?
     end
 
-    def pre_tax_amount
-      item_refund_units.sum :pre_tax_amount
+    def prepare_canceled_shipments
+      inventory_units = item_refund_units.map(&:inventory_unit)
+      order.shipments.select do |shipment|
+        (shipment.inventory_units - inventory_units).empty?
+      end
     end
   end
 end
