@@ -107,7 +107,7 @@ def create_order(skus, user = nil, store_credit_payment_percent = 0, store_credi
   order.save
   order = Spree::Order.find_by_number(order.number)
   puts "Order state: #{order.state}"
-  payment.capture!
+  payment.capture! if payment.present?
   puts "Payment captured"
   order
 end
