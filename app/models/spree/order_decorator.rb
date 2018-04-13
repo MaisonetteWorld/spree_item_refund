@@ -7,7 +7,7 @@ module Spree
     end
 
     def item_refunds_enabled?
-      completed? && item_refunds.any? || shipments.where(state: :ready).any?
+      completed? && item_refunds.any?
     end
   end
 end

@@ -32,7 +32,9 @@ module Spree
           item_refund.order.shipments << shipment
           inventory_unit.update(shipment: shipment)
         end
-        shipment.cancel!
+        unless shipment.state == 'shipped'
+          shipment.cancel!
+        end
         item_refund.order.reload
       end
     end

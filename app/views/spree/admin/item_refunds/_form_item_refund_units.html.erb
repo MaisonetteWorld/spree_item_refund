@@ -20,14 +20,14 @@
     <%= f.fields_for :item_refund_units, item_refund_units do |item_fields| %>
       <% unit = item_fields.object %>
       <% inventory_unit = unit.inventory_unit %>
-      <% editable = @item_refund.editable? && unit.inventory_unit.on_hand? %>
+      <% editable = @item_refund.editable? %>
       <tr>
         <% if editable %>
           <td class="inventory-unit-checkbox">
             <%= item_fields.hidden_field :inventory_unit_id %>
             <%= item_fields.check_box :_destroy, { checked: checked, class: 'add-item', "data-price" => unit.pre_tax_amount }, '0', '1' %>
           </td>
-      <% end %>
+        <% end %>
         <td>
           <div class="variant-name"><%= inventory_unit.variant.name %></div>
           <div class="variant-options"><%= inventory_unit.variant.options_text %></div>
@@ -39,12 +39,8 @@
           </td>
         <% end %>
         <td>
-          <% if editable %>
-            <%= item_fields.text_field :pre_tax_amount,
-                                       { class: 'refund-amount-input form-control' } %>
-          <% else %>
-            <%= unit.display_pre_tax_amount %>
-          <% end %>
+          <%= item_fields.text_field :pre_tax_amount,
+                                     { class: 'refund-amount-input form-control' } %>
         </td>
         <% if !@item_refund.editable? %>
           <td><%= unit.display_tax %></td>
