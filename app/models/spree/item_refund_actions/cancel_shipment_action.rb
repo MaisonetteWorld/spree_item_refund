@@ -19,7 +19,6 @@ module Spree
         inventory_unit = item_refund_unit.inventory_unit
         shipment = inventory_unit.shipment
         return if shipment.canceled?
-
         if shipment.inventory_units.not_canceled.empty?
           # Cancel the original shipment
           # Its shipping cost is already included in total

@@ -39,7 +39,7 @@ module Spree
     def prepare_canceled_shipments
       inventory_units = item_refund_units.map(&:inventory_unit)
       order.shipments.select do |shipment|
-        (shipment.inventory_units - inventory_units).empty?
+        (shipment.inventory_units - inventory_units).empty? && shipment.state != 'shipped'
       end
     end
   end
