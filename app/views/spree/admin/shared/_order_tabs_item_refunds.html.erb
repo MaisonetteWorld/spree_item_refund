@@ -1,7 +1,5 @@
 <% if can? :index, Spree::ItemRefund %>
-  <% if @order.item_refunds_enabled? %>
     <li<%== ' class="active"' if current == :item_refunds %>>
       <%= link_to_with_icon 'transfer', Spree.t(:item_refunds), spree.admin_order_item_refunds_url(@order) %>
     </li>
-  <% end %>
 <% end %>
