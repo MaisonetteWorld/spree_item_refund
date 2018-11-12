@@ -3,11 +3,7 @@ module Spree
     class OriginalPayment
       class << self
         def calculate_amount_to_refund(payment, remaining_refund_amount)
-          if payment.credit_allowed >= remaining_refund_amount
-            remaining_refund_amount
-          else
-            remaining_refund_amount - payment.credit_allowed
-          end
+          payment.credit_allowed >= remaining_refund_amount ? remaining_refund_amount : payment.credit_allowed
         end
 
         def payments(item_refund)
